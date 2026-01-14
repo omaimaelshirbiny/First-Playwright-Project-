@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker';
 import { log } from 'node:console';
 import User from '../Models/User';
 import UserApi from '../Apis/UserApi';
+import TodoApi from '../Apis/TodoApi';
 
 test('should be able to register to the todo website', async ({ page, request, context }) => {
 
@@ -17,14 +18,14 @@ test('should be able to register to the todo website', async ({ page, request, c
   const response = await new UserApi(request).register(user);
 
   const responseBody = await response.json();
-  const accessTaken = responseBody.access_token;
+  const accessToken = responseBody.access_token;
   const userId = responseBody.userID;
   const firstName = responseBody.firstName;
 
   await context.addCookies([
     {
       name: 'access_token',
-      value: accessTaken,
+      value: accessToken,
       url: 'https://qacart-todo.herokuapp.com',
     },
     {
@@ -56,26 +57,18 @@ test('should be able to login with adding todo list for qacartList website ', as
       '12345678900'
     );
   // api call for register user 
-  const response = await request.post('/api/v1/users/register', {
-    data: {
+    const response = await new UserApi(request).register(user);
 
-      email: user.getEmail(),
-      firstName: user.getFirstName(),
-      lastName: user.getLastName(),
-      password: user.getPassword(),
-
-    }
-  });
 
   const responseBody = await response.json();
-  const accessTaken = responseBody.access_token;
+  const accessToken = responseBody.access_token;
   const userId = responseBody.userID;
   const firstName = responseBody.firstName;
 
   await context.addCookies([
     {
       name: 'access_token',
-      value: accessTaken,
+      value: accessToken,
       url: 'https://qacart-todo.herokuapp.com',
     },
     {
@@ -100,7 +93,7 @@ test('should be able to login with adding todo list for qacartList website ', as
 
     },
     headers: {
-      Authorization: `Bearer ${accessTaken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 
@@ -122,26 +115,19 @@ test('should be able to delete todo list ', async ({ page, request, context }) =
   );
 
   // api call for register user 
-  const response = await request.post('/api/v1/users/register', {
-    data: {
-
-      email: user.getEmail(),
-      firstName: user.getFirstName(),
-      lastName: user.getLastName(),
-      password: user.getPassword(),
-
-    }
-  });
+    const response = await new UserApi(request).register(user);
 
   const responseBody = await response.json();
-  const accessTaken = responseBody.access_token;
+  const accessToken = responseBody.access_token;
   const userId = responseBody.userID;
   const firstName = responseBody.firstName;
+
+  user.setAccessToken(accessToken);
 
   await context.addCookies([
     {
       name: 'access_token',
-      value: accessTaken,
+      value: accessToken,
       url: 'https://qacart-todo.herokuapp.com',
     },
     {
@@ -158,17 +144,18 @@ test('should be able to delete todo list ', async ({ page, request, context }) =
 
   // api call for add todo 
 
-  await request.post('/api/v1/tasks', {
-    data: {
+  await new TodoApi(request).todoFn(user);
+  // await request.post('/api/v1/tasks', {
+  //   data: {
 
-      isCompleted: false,
-      item: "playwright",
+  //     isCompleted: false,
+  //     item: "playwright",
 
-    },
-    headers: {
-      Authorization: `Bearer ${accessTaken}`,
-    },
-  });
+  //   },
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //   },
+  // });
 
 
   await page.goto('/todo');

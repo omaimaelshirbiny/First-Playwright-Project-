@@ -1,10 +1,12 @@
+import { access } from "node:fs";
+
 export default class User {
    
    private firstName: string;
     private lastName: string;
     private email: string;
     private password: string;
-    private access_taken: string;
+    private access_token: string;
     private userId: string;
 
     constructor(
@@ -34,4 +36,14 @@ export default class User {
     getPassword(): string {
         return this.password;
     }
+
+    setAccessToken(access_token: string) {
+        this.access_token = access_token;
+    }
+
+    getAccessToken() {
+        return this.access_token;
+    }
+
+    
 }
