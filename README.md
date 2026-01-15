@@ -15,31 +15,30 @@ to test a [Todo web application] (https://qacart-todo.herokuapp.com).
 
 ### UI Automation
 
-Login using stored cookies
-Add, complete, and delete todo items
-Validate UI behavior using Playwright assertions
+- Login using stored cookies
+- Add, complete, and delete todo items
+- Validate UI behavior using Playwright assertions
 
 ### API Testing
 
-Register users using REST API
-Create todo items via API
-Handle authentication tokens
+- Register users using REST API
+- Create todo items via API
+- Handle authentication tokens
 
 
 ### Framework Design
 
-Page Object Model (POM)
-Reusable API and UI layers
-Environment-independent execution
-Clean folder structure
+- Page Object Model (POM) design pattern 
+- Reusable API and UI layers
 
 ### Test Scenarios Covered
 
-User registration using API
-Login using token injection
-Create todo using API
-Validate todo appears in UI
-Complete and delete todo item
-Verify empty state after deletion
+- User registration using GUI
+- User registration using API
+- Validate todo appears in through UI
+- Complete and delete todo item test cases through UI
+- Verify empty state after deletion through UI
+- Login using token injection Using API 
+- Create todo using API
 
 
