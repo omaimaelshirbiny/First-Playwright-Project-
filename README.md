@@ -1,14 +1,15 @@
 # First Playwright Project – QA Automation Framework
 
-This repository contains an end-to-end test automation framework built using Playwright with TypeScript to test a Todo web application.
+This repository contains an end-to-end test automation framework built using Playwright with TypeScript 
+to test a [Todo web application] (https://qacart-todo.herokuapp.com).
 
 ## Tech Stack
 
-Playwright
-TypeScript
-Node.js
-Faker (Test Data Generation)
-Page Object Model (POM)
+- Playwright
+- TypeScript
+- Node.js
+- Faker (Test Data Generation)
+- Page Object Model (POM)
 
 ## Project Features
 
