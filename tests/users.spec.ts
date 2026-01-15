@@ -6,12 +6,7 @@ import TodoPage from '../pages/TodoPage';
 
 test ('should be able to register to the todo website', async ({page})=>{
 
-  const user = new User(
-    faker.person.firstName(), 
-    faker.person.lastName(), 
-    faker.internet.email(), 
-    '12345678900'
-  );
+  const user = new User( );
 
   const registerPage = new RegisterPage(page);
   await registerPage.load();

@@ -4,15 +4,27 @@ import { log } from 'node:console';
 import User from '../Models/User';
 import UserApi from '../Apis/UserApi';
 import TodoApi from '../Apis/TodoApi';
+import RegisterPage from '../pages/RegisterPage';
+import TodoPage from '../pages/TodoPage';
+import NewTodoPage from '../pages/NewTodoPage';
+import { todo } from 'node:test';
+
+test('should be able to register to the todo website 2', async ({ page, request, context }) => {
+
+  const user = new User();
+
+  const registerPage = new RegisterPage(page, request, context);
+  await registerPage.registerUsingApi(user);
+
+  const todoPage = new TodoPage(page);
+  await todoPage.load();
+  const welcomeMessage = todoPage.getWelcomeMessageText();
+  await expect(welcomeMessage).toBeVisible();
+});
 
 test('should be able to register to the todo website', async ({ page, request, context }) => {
 
-  const user = new User(
-    faker.person.firstName(),
-    faker.person.lastName(),
-    faker.internet.email(),
-    '12345678900'
-  );
+  const user = new User();
 
   // API call to register user
   const response = await new UserApi(request).register(user);
@@ -46,16 +58,10 @@ test('should be able to register to the todo website', async ({ page, request, c
 
 });
 
-
 test('should be able to login with adding todo list for qacartList website ', async ({ page, request, context }) => {
 
 
-   const user = new User(
-      faker.person.firstName(), 
-      faker.person.lastName(), 
-      faker.internet.email(), 
-      '12345678900'
-    );
+   const user = new User( );
   // api call for register user 
     const response = await new UserApi(request).register(user);
 
@@ -104,15 +110,31 @@ test('should be able to login with adding todo list for qacartList website ', as
 
 
 
+test('should be able to login with adding todo list for qacartList website 2', async ({ page, request, context }) => {
+
+
+  const user = new User();
+
+  // api call for register user 
+  const registerPage = new RegisterPage(page, request, context);
+  await registerPage.registerUsingApi(user);
+  // ui steps to add todo 
+  
+  const newTodoPage = new NewTodoPage(page);
+  await newTodoPage.register();
+  await newTodoPage.addNewTodo('playwright');
+  const todoPage = new TodoPage(page);
+  const todoItems = todoPage.getTodoItemText();
+  await expect(todoItems).toHaveText('playwright');
+});
+
+
+
+
 test('should be able to delete todo list ', async ({ page, request, context }) => {
 
 
-   const user = new User(
-    faker.person.firstName(), 
-    faker.person.lastName(), 
-    faker.internet.email(), 
-    '12345678900'
-  );
+   const user = new User();
 
   // api call for register user 
     const response = await new UserApi(request).register(user);
@@ -143,24 +165,36 @@ test('should be able to delete todo list ', async ({ page, request, context }) =
   ])
 
   // api call for add todo 
-
   await new TodoApi(request).todoFn(user);
-  // await request.post('/api/v1/tasks', {
-  //   data: {
-
-  //     isCompleted: false,
-  //     item: "playwright",
-
-  //   },
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //   },
-  // });
-
-
+  // ui steps
   await page.goto('/todo');
   await page.locator('[data-testid="complete-task"]').nth(0).click();
   await page.locator('[data-testid="delete"]').nth(0).click();
   await expect(page.locator('[data-testid="no-todos"]')).toBeVisible();
 
+});
+
+test('should be able to delete todo list 2 ', async ({ page, request, context }) => {
+
+  const user = new User();
+
+  // api call for register user 
+  const registerPage = new RegisterPage(page, request, context);
+  await registerPage.registerUsingApi(user);
+  // api call for add todo 
+  const newTodoPage = new NewTodoPage(page,request);
+  await newTodoPage.addNewTodoUsingApi( user);
+
+  // ui steps
+  // await page.goto('/todo');
+  // await page.locator('[data-testid="complete-task"]').nth(0).click();
+  // await page.locator('[data-testid="delete"]').nth(0).click();
+  // await expect(page.locator('[data-testid="no-todos"]')).toBeVisible();
+
+  const todoPage = new TodoPage(page);
+   await todoPage.load();
+    await todoPage.deleteTodoItem();
+    const noTodosMessageText = todoPage.getNoTodosMessageText();
+    await expect(noTodosMessageText).toBeVisible();
+  
 });
